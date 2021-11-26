@@ -3,3 +3,4 @@
 /workspace.xml
 /out/
 /src/test/
+src/main/resources/META-INF/persistence.xml

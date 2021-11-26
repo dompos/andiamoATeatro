@@ -2,7 +2,7 @@ import javax.persistence.Column;
 import javax.persistence.Entity;
 import javax.persistence.Id;
 
-/*@Entity ciao ciao
+/*@Entity ciao ciao sono fede
 public class Persona {
     private String codiceFiscale;
     private String nome;

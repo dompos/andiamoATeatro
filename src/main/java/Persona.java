@@ -2,7 +2,7 @@ import javax.persistence.Column;
 import javax.persistence.Entity;
 import javax.persistence.Id;
 
-/*@Entity ciao ciao sono fede
+/*@Entity        _____________     nuovo test
 public class Persona {
     private String codiceFiscale;
     private String nome;

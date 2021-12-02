@@ -18,6 +18,8 @@ public class Utente {
 
     public static void RegistraUtente(){
 
+
+
     }
 
     boolean Prenotazione(Spettacoli spettacolo){            //bisogna ancora creare il costruttore
@@ -28,5 +30,16 @@ public class Utente {
 
     public List<Spettacoli> RicercaSpettacoli(){
         return new ArrayList<>();
+    }
+
+    @Override
+    public String toString() {
+        return "Utente{" +
+                "nome='" + nome + '\'' +
+                ", cognome='" + cognome + '\'' +
+                ", indirizzo='" + indirizzo + '\'' +
+                ", email='" + email + '\'' +
+                ", numeroTelefonico='" + numeroTelefonico + '\'' +
+                '}';
     }
 }

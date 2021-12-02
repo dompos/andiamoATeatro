@@ -2,12 +2,12 @@ import java.util.Date;
 
 public class Spettacoli {
 
-    private String Nome;
-    private String NomeSala;
-    private String Genere;
-    private Date Orario;
-    private Date Giorno;
-    private double Prezzo;
-    private int Durata, id;
+    private String nome;
+    private String nomeSala;
+    private String genere;
+    private Date orario;
+    private Date giorno;
+    private double prezzo;
+    private int durata, id;
 
 }

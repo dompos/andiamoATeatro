@@ -1,3 +1,13 @@
+//------------------------------------------------
+/**
+ import java.sql.Connection;
+import java.sql.PreparedStatement;
+import java.sql.ResultSet;
+import java.sql.SQLException;
+ */       import java.sql.*;        // basta scrivere così
+//-----------------------------------------------
+
+
 import java.util.ArrayList;
 import java.util.List;
 
@@ -16,11 +26,55 @@ public class Utente {
         this.telefono = numeroTelefonico;
     }
 
-    public static void RegistraUtente(){
 
 
+    //------------------------------------------------------------------
+
+    //get
+    public String getNome() {
+        return nome;
+    }
+
+    public String getCognome() {
+        return cognome;
+    }
+
+    public String getIndirizzo() { return indirizzo; }
+
+    public String getEmail() { return email; }
+
+    public String getTelefono() {
+        return telefono;
+    }
+
+    //metodo
+
+    public static void registraUtente(Connection connection, Utente utente) throws SQLException {
+        //Connection connection=null;  //o Connection connection come argomento
+
+        String query = "SELECT email FROM public.utente WHERE utente.email = '" + utente.getEmail() + "'";
+        PreparedStatement statement = connection.prepareStatement(query);
+        ResultSet resultSet = statement.executeQuery();
+
+        //utente non presente
+        if (resultSet.toString() != null) {
+            //insert to nel database
+            statement = connection.prepareStatement("INSERT INTO public.utente (nome,cognome,residenza,email,telefono) VALUES " +
+                    "('" + utente.getNome() + "','" + utente.getCognome() + "','" +
+                    utente.getIndirizzo() + "','" + utente.getEmail() + "','" + utente.getTelefono() + "')");
+            statement.executeQuery();
+
+            //altrimenti messaggio di avviso
+        } else {
+            System.out.println("Registrazione fallita! L'utente risulta già registato!");
+        }
 
     }
+
+
+    //----------------------------------------------------------
+
+
 
     boolean Prenotazione(Spettacoli spettacolo){            //bisogna ancora creare il costruttore
 

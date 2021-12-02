@@ -1,5 +1,7 @@
 public class Posti {
-    String fila, NomeSala;
-    int Numero,id;
+    private String fila;
+    private String NomeSala;
+    private int Numero;
+    private int id;
 
 }

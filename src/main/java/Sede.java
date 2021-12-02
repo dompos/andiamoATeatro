@@ -1,9 +1,11 @@
 public class Sede {
-    String Nome, Indirizzo, Comune;
-    int id;
-    boolean coperto;
+    private String Nome;
+    private String Indirizzo;
+    private String Comune;
+    private int id;
+    private boolean coperto;
 
-    boolean isDisponibile(String spettacolo){
+    public boolean isDisponibile(String spettacolo){
         return true;
 
     }

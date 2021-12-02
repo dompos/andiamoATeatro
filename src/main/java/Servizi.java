@@ -1,21 +1,23 @@
 import javax.management.Query;
+import java.util.ArrayList;
+import java.util.List;
 
 public class Servizi {
-    String Query;
+    private String Query;
 
-    CreaQuery(){
-
-    }
-
-    caricaDb(){
+    private void CreaQuery(){
 
     }
 
-    scaricaDb(){
-
+    public boolean caricaDb(){
+        return true;
     }
 
-    suggerimenti(emailUtente){
+    public boolean scaricaDb(){
+        return true;
+    }
 
+    public List<Spettacoli> suggerimenti(String emailUtente){
+        return new ArrayList<>();
     }
 }

@@ -1,9 +1,12 @@
+import java.util.ArrayList;
+import java.util.List;
+
 public class Utente {
-    String Nome;
-    String Cgnome;
-    String Indirizzo;
-    String email;
-    String NumeroTelefonico;
+    private String Nome;
+    private String Cgnome;
+    private String Indirizzo;
+    private String email;
+    private String NumeroTelefonico;
 
     public Utente(String nome, String cgnome, String indirizzo, String email, String numeroTelefonico) {
         Nome = nome;
@@ -12,16 +15,18 @@ public class Utente {
         this.email = email;
         NumeroTelefonico = numeroTelefonico;
     }
-    static void RegistraUtente(){
+
+    public static void RegistraUtente(){
 
     }
-        boolean Prenotazione(Spettacolo spettacolo){            //bisogna ancora creare il costruttore
+
+    boolean Prenotazione(Spettacoli spettacolo){            //bisogna ancora creare il costruttore
 
         return true;
 
     }
 
-    public void RicercaSpettacoli(){
-
+    public List<Spettacoli> RicercaSpettacoli(){
+        return new ArrayList<>();
     }
 }

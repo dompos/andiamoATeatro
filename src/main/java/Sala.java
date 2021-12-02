@@ -1,6 +1,7 @@
 public class Sala {
-    int nPosti, idSede;
-    String Nome;
+    private int nPosti;
+    private  int idSede;
+    private String Nome;
 
 
 }

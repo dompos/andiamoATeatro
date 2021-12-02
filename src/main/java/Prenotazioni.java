@@ -1,7 +1,9 @@
 public class Prenotazioni {
-    int id,Spettacolo, idPosto;
-    String emailUtente;
-    float PrezzoFinale;
+    private int id;
+    private int idSpettacolo;
+    private int idPosto;
+    private String emailUtente;
+    private float PrezzoFinale;
 
 
 }

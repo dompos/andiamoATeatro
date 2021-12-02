@@ -4,3 +4,5 @@
 /out/
 /src/test/
 src/main/resources/META-INF/persistence.xml
+src/main/java/Persona.java
+src/main/java/Test.java

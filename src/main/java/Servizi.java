@@ -57,6 +57,65 @@ public class Servizi {
         return sede;
     }
 
+    public static Sala scaricaSala(String nome){
+        ResultSet risultato = null;
+        Sala sala = null;
+
+        try{
+            Connection con = DriverManager.getConnection(URL,USERNAME,PASSWORD);
+            select = con.prepareStatement("select * from public.sala where nome = '" + nome + "'");
+            risultato = select.executeQuery();
+            risultato.next();
+            sala = new Sala(risultato.getInt("n_posti"),
+                    risultato.getInt("sede_id"),
+                    risultato.getString("nome"));
+            System.out.println(sala.toString());
+        } catch (SQLException e) {
+            e.printStackTrace();
+        }
+        return sala;
+    }
+
+    public static Prenotazioni scaricaPrenotazione(int id){
+        ResultSet risultato = null;
+        Prenotazioni prenotazione = null;
+
+        try{
+            Connection con = DriverManager.getConnection(URL,USERNAME,PASSWORD);
+            select = con.prepareStatement("select * from public.prenotazioni where id = " + id );
+            risultato = select.executeQuery();
+            risultato.next();
+            prenotazione = new Prenotazioni(risultato.getInt("id"),
+                                    risultato.getInt("spettacoli_id"),
+                                    risultato.getInt("posti_id"),
+                                    risultato.getString("utente_email"));
+            System.out.println(prenotazione.toString());
+        } catch (SQLException e) {
+            e.printStackTrace();
+        }
+        return prenotazione;
+    }
+
+    public static Posti scaricaPosti(int id){
+        ResultSet risultato = null;
+        Posti posto = null;
+
+        try{
+            Connection con = DriverManager.getConnection(URL,USERNAME,PASSWORD);
+            select = con.prepareStatement("select * from public.posti where id = " + id );
+            risultato = select.executeQuery();
+            risultato.next();
+            posto = new Posti(risultato.getString("fila"),
+                              risultato.getString("sala_nome"),
+                              risultato.getInt("numero"),
+                              risultato.getInt("id"));
+            System.out.println(posto.toString());
+        } catch (SQLException e) {
+            e.printStackTrace();
+        }
+        return posto;
+    }
+
     public List<Spettacoli> suggerimenti(String emailUtente){
         return new ArrayList<>();
     }

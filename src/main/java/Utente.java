@@ -2,18 +2,18 @@ import java.util.ArrayList;
 import java.util.List;
 
 public class Utente {
-    private String Nome;
-    private String Cgnome;
-    private String Indirizzo;
+    private String nome;
+    private String cognome;
+    private String indirizzo;
     private String email;
-    private String NumeroTelefonico;
+    private String numeroTelefonico;
 
-    public Utente(String nome, String cgnome, String indirizzo, String email, String numeroTelefonico) {
-        Nome = nome;
-        Cgnome = cgnome;
-        Indirizzo = indirizzo;
+    public Utente(String nome, String cognome, String indirizzo, String email, String numeroTelefonico) {
+        this.nome = nome;
+        this.cognome = cognome;
+        this.indirizzo = indirizzo;
         this.email = email;
-        NumeroTelefonico = numeroTelefonico;
+        this.numeroTelefonico = numeroTelefonico;
     }
 
     public static void RegistraUtente(){

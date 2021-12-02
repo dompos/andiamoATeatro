@@ -6,14 +6,14 @@ public class Utente {
     private String cognome;
     private String indirizzo;
     private String email;
-    private String numeroTelefonico;
+    private String telefono;
 
     public Utente(String nome, String cognome, String indirizzo, String email, String numeroTelefonico) {
         this.nome = nome;
         this.cognome = cognome;
         this.indirizzo = indirizzo;
         this.email = email;
-        this.numeroTelefonico = numeroTelefonico;
+        this.telefono = numeroTelefonico;
     }
 
     public static void RegistraUtente(){
@@ -39,7 +39,7 @@ public class Utente {
                 ", cognome='" + cognome + '\'' +
                 ", indirizzo='" + indirizzo + '\'' +
                 ", email='" + email + '\'' +
-                ", numeroTelefonico='" + numeroTelefonico + '\'' +
+                ", telefono='" + telefono + '\'' +
                 '}';
     }
 }

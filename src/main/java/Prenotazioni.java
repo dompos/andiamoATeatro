@@ -3,7 +3,7 @@ public class Prenotazioni {
     private int idSpettacolo;
     private int idPosto;
     private String emailUtente;
-    private float PrezzoFinale;
+    private float prezzoFinale;
 
 
 }

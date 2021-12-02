@@ -1,7 +1,7 @@
 public class Sede {
-    private String Nome;
-    private String Indirizzo;
-    private String Comune;
+    private String nome;
+    private String indirizzo;
+    private String comune;
     private int id;
     private boolean coperto;
 

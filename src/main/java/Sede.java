@@ -1,3 +1,7 @@
+import java.sql.Connection;
+import java.sql.SQLException;
+import java.util.List;
+
 public class Sede {
     private String nome;
     private String indirizzo;
@@ -13,9 +17,8 @@ public class Sede {
         this.coperto = coperto;
     }
 
-    public boolean isDisponibile(String spettacolo){
+    public boolean isDisponibile(Connection conn, String spettacolo) throws SQLException {
         return true;
-
     }
 
     @Override

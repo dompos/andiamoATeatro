@@ -52,4 +52,18 @@ public class Spettacoli {
     public int getId() {
         return id;
     }
+
+    @Override
+    public String toString() {
+        return "Spettacoli{" +
+                "nome='" + nome + '\'' +
+                ", nomeSala='" + nomeSala + '\'' +
+                ", genere='" + genere + '\'' +
+                ", orario=" + orario +
+                ", giorno=" + giorno +
+                ", prezzo=" + prezzo +
+                ", durata=" + durata +
+                ", id=" + id +
+                '}';
+    }
 }

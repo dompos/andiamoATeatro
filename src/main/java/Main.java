@@ -12,6 +12,7 @@ public class Main {
             Servizi.scaricaSala(conn,"Sala Debora");
             Servizi.scaricaPrenotazione(conn,1);
             Servizi.scaricaPosti(conn,1);
+            Servizi.scaricaSpettacolo(conn, 1);
             Utente utente = new Utente("Davide", "Golino", "Roma", "dasuaphs@blizzard.com", "3694221564");
             System.out.println(Servizi.caricaUtente(conn,utente));
             Servizi.scaricaUtente(conn,"dasuaphs@blizzard.com");

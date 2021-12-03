@@ -108,6 +108,30 @@ public class Servizi {
         }
     }
 
+    public static Spettacoli scaricaSpettacolo(Connection conn, int id) throws SQLException{
+        Spettacoli spettacolo = null;
+        select = conn.prepareStatement("select * from public.spettacoli where id = " + id );
+        ResultSet risultato = select.executeQuery();
+        while (risultato.next()) {
+            spettacolo = new Spettacoli(risultato.getString("nome"),
+                    risultato.getString("sala_nome"),
+                    risultato.getString("genere"),
+                    risultato.getDate("orario"),
+                    risultato.getDate("giorno"),
+                    risultato.getDouble("prezzo"),
+                    risultato.getInt("durata"),
+                    risultato.getInt("id"));
+        }
+        select.close();
+        if (spettacolo == null) {
+            System.out.println("Non esiste prenotazione con questo id: " + id);
+            return null;
+        }else{
+            System.out.println(spettacolo.toString());
+            return spettacolo;
+        }
+    }
+
     public static Posti scaricaPosti(Connection conn, int id) throws SQLException{
         Posti posto = null;
             select = conn.prepareStatement("select * from public.posti where id = " + id );

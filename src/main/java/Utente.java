@@ -30,7 +30,7 @@ public class Utente {
 
     //------------------------------------------------------------------
 
-    //get
+    //getter
     public String getNome() {
         return nome;
     }
@@ -50,8 +50,6 @@ public class Utente {
     //metodo
 
     public static void registraUtente(Connection connection, Utente utente) throws SQLException {
-        //Connection connection=null;  //o Connection connection come argomento
-
         String query = "SELECT email FROM public.utente WHERE utente.email = '" + utente.getEmail() + "'";
         PreparedStatement statement = connection.prepareStatement(query);
         ResultSet resultSet = statement.executeQuery();
@@ -59,10 +57,7 @@ public class Utente {
         //utente non presente
         if (resultSet.toString() != null) {
             //insert to nel database
-            statement = connection.prepareStatement("INSERT INTO public.utente (nome,cognome,residenza,email,telefono) VALUES " +
-                    "('" + utente.getNome() + "','" + utente.getCognome() + "','" +
-                    utente.getIndirizzo() + "','" + utente.getEmail() + "','" + utente.getTelefono() + "')");
-            statement.executeQuery();
+            Servizi.caricaUtente(connection, utente);
 
             //altrimenti messaggio di avviso
         } else {

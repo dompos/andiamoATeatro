@@ -7,6 +7,7 @@ import java.util.List;
 public class Servizi {
     private static PreparedStatement insert;
     private static PreparedStatement select;
+    private static PreparedStatement selectAll;
     public static final String URL = "jdbc:postgresql://localhost:5432/andiamoateatro";
     public static final String USERNAME = "postgres";
     public static final String PASSWORD ="AlberobellO"; //inserite le vostre pssw
@@ -150,6 +151,52 @@ public class Servizi {
             System.out.println(posto.toString());
             return posto;
         }
+    }
+
+    public static List<Object> scaricaTutto(Connection conn, String oggetto) throws SQLException{
+
+        selectAll = conn.prepareStatement("select * from public." + oggetto.toLowerCase());
+        ResultSet risultato = selectAll.executeQuery();
+        List<Object> lista;
+        switch (oggetto.toLowerCase()){
+            case "utenti":
+                lista = new ArrayList<>();
+                while (risultato.next()){
+                    lista.add(scaricaUtente(conn, risultato.getString("email")));
+                }
+                return lista;
+            case "spettacoli":
+                lista = new ArrayList<>();
+                while (risultato.next()){
+                    lista.add(scaricaSpettacolo(conn, risultato.getInt("id")));
+                }
+                return lista;
+            case "posti":
+                lista = new ArrayList<>();
+                while (risultato.next()){
+                    lista.add(scaricaPosti(conn, risultato.getInt("id")));
+                }
+                return lista;
+            case "prenotazioni":
+                lista = new ArrayList<>();
+                while (risultato.next()){
+                    lista.add(scaricaPrenotazione(conn, risultato.getInt("id")));
+                }
+                return lista;
+            case "sale":
+                lista = new ArrayList<>();
+                while (risultato.next()){
+                    lista.add(scaricaSala(conn, risultato.getString("nome")));
+                }
+                return lista;
+            case "sedi":
+                lista = new ArrayList<>();
+                while (risultato.next()){
+                    lista.add(scaricaSede(conn, risultato.getInt("id")));
+                }
+                return lista;
+        }
+        return null;
     }
 
     public List<Spettacoli> suggerimenti(String emailUtente){

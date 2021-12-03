@@ -1,4 +1,5 @@
 import javax.management.Query;
+import java.net.ConnectException;
 import java.sql.*;
 import java.util.ArrayList;
 import java.util.List;
@@ -6,114 +7,125 @@ import java.util.List;
 public class Servizi {
     private static PreparedStatement insert;
     private static PreparedStatement select;
-    private static final String URL = "jdbc:postgresql://localhost:5432/andiamoateatro";
-    private static final String USERNAME = "postgres";
-    private static final String PASSWORD ="AlberobellO"; //inserite le vostre pssw
+    public static final String URL = "jdbc:postgresql://localhost:5432/andiamoateatro";
+    public static final String USERNAME = "postgres";
+    public static final String PASSWORD ="AlberobellO"; //inserite le vostre pssw
 
 
-    public boolean caricaDb(){
-        return true;
+    public static boolean caricaUtente(Connection conn, Utente utente)  throws SQLException{
+        if (scaricaUtente(conn, utente.getEmail()) != null)
+            return false;
+                insert = conn.prepareStatement("insert into public.utente " +
+                        "(email, cognome, nome, residenza, telefono)" +
+                        "values ('" + utente.getEmail() + "','" + utente.getCognome() + "','" + utente.getNome() + "','"
+                        + utente.getIndirizzo() + "','" + utente.getTelefono() + "')");
+                insert.executeUpdate();
+                insert.close();
+            return true;
+
     }
 
-    public static Utente scaricaUtente(String emailUtente) {
-        ResultSet risultato = null;
-        Utente utente=null;
-
-        try{
-            Connection con = DriverManager.getConnection(URL,USERNAME,PASSWORD);
-            select = con.prepareStatement("select * from public.utente where email = '" + emailUtente + "'" );
-            risultato = select.executeQuery();
-            risultato.next();
-            utente=new Utente(risultato.getString("nome"),
-                    risultato.getString("cognome"),
-                    risultato.getString("residenza"),
-                    risultato.getString("email"),
-                    risultato.getString("telefono"));
+    public static Utente scaricaUtente(Connection conn, String emailUtente) throws SQLException{
+        Utente utente = null;
+        select = conn.prepareStatement("select * from public.utente where email = '" + emailUtente + "'" );
+        ResultSet risultato = select.executeQuery();
+            while (risultato.next())
+            {
+                utente = new Utente(risultato.getString("nome"),
+                        risultato.getString("cognome"),
+                        risultato.getString("residenza"),
+                        risultato.getString("email"),
+                        risultato.getString("telefono"));
+            }
+        select.close();
+        if (utente == null) {
+            System.out.println("Non esiste un utente con questa mail: " + emailUtente);
+            return null;
+        }
+        else {
             System.out.println(utente.toString());
-        } catch (SQLException e) {
-            e.printStackTrace();
+            return utente;
         }
-        return utente;
     }
 
-    public static Sede scaricaSede(int id){
-        ResultSet risultato = null;
+    public static Sede scaricaSede(Connection conn, int id) throws SQLException{
         Sede sede = null;
-
-        try{
-            Connection con = DriverManager.getConnection(URL,USERNAME,PASSWORD);
-            select = con.prepareStatement("select * from public.sede where id = " + id );
-            risultato = select.executeQuery();
-            risultato.next();
-            sede = new Sede(risultato.getString("nome"),
-                    risultato.getString("indirizzo"),
-                    risultato.getString("comune"),
-                    risultato.getInt("id"),
-                    risultato.getBoolean("coperto"));
+        select = conn.prepareStatement("select * from public.sede where id = " + id );
+        ResultSet risultato = select.executeQuery();
+        while (risultato.next()) {
+               sede = new Sede(risultato.getString("nome"),
+               risultato.getString("indirizzo"),
+               risultato.getString("comune"),
+               risultato.getInt("id"),
+               risultato.getBoolean("coperto"));
+            }
+        select.close();
+        if (sede == null) {
+            System.out.println("Non esiste sede con questo id: " + id);
+            return null;
+        }else{
             System.out.println(sede.toString());
-        } catch (SQLException e) {
-            e.printStackTrace();
+            return sede;
         }
-        return sede;
     }
 
-    public static Sala scaricaSala(String nome){
-        ResultSet risultato = null;
+    public static Sala scaricaSala(Connection conn, String nome) throws SQLException{
         Sala sala = null;
-
-        try{
-            Connection con = DriverManager.getConnection(URL,USERNAME,PASSWORD);
-            select = con.prepareStatement("select * from public.sala where nome = '" + nome + "'");
-            risultato = select.executeQuery();
-            risultato.next();
-            sala = new Sala(risultato.getInt("n_posti"),
-                    risultato.getInt("sede_id"),
-                    risultato.getString("nome"));
+        select = conn.prepareStatement("select * from public.sala where nome = '" + nome + "'");
+        ResultSet risultato = select.executeQuery();
+            while (risultato.next()) {
+                sala = new Sala(risultato.getInt("n_posti"),
+                        risultato.getInt("sede_id"),
+                        risultato.getString("nome"));
+            }
+        select.close();
+        if (sala == null) {
+            System.out.println("Non esiste sala con questo nome: " + nome);
+            return null;
+        }else{
             System.out.println(sala.toString());
-        } catch (SQLException e) {
-            e.printStackTrace();
+            return sala;
         }
-        return sala;
     }
 
-    public static Prenotazioni scaricaPrenotazione(int id){
-        ResultSet risultato = null;
+    public static Prenotazioni scaricaPrenotazione(Connection conn, int id) throws SQLException{
         Prenotazioni prenotazione = null;
-
-        try{
-            Connection con = DriverManager.getConnection(URL,USERNAME,PASSWORD);
-            select = con.prepareStatement("select * from public.prenotazioni where id = " + id );
-            risultato = select.executeQuery();
-            risultato.next();
-            prenotazione = new Prenotazioni(risultato.getInt("id"),
-                                    risultato.getInt("spettacoli_id"),
-                                    risultato.getInt("posti_id"),
-                                    risultato.getString("utente_email"));
+            select = conn.prepareStatement("select * from public.prenotazioni where id = " + id );
+            ResultSet risultato = select.executeQuery();
+            while (risultato.next()) {
+                prenotazione = new Prenotazioni(risultato.getInt("id"),
+                        risultato.getInt("spettacoli_id"),
+                        risultato.getInt("posti_id"),
+                        risultato.getString("utente_email"));
+            }
+        select.close();
+        if (prenotazione == null) {
+            System.out.println("Non esiste prenotazione con questo id: " + id);
+            return null;
+        }else{
             System.out.println(prenotazione.toString());
-        } catch (SQLException e) {
-            e.printStackTrace();
+            return prenotazione;
         }
-        return prenotazione;
     }
 
-    public static Posti scaricaPosti(int id){
-        ResultSet risultato = null;
+    public static Posti scaricaPosti(Connection conn, int id) throws SQLException{
         Posti posto = null;
-
-        try{
-            Connection con = DriverManager.getConnection(URL,USERNAME,PASSWORD);
-            select = con.prepareStatement("select * from public.posti where id = " + id );
-            risultato = select.executeQuery();
-            risultato.next();
-            posto = new Posti(risultato.getString("fila"),
-                              risultato.getString("sala_nome"),
-                              risultato.getInt("numero"),
-                              risultato.getInt("id"));
+            select = conn.prepareStatement("select * from public.posti where id = " + id );
+            ResultSet risultato = select.executeQuery();
+            while(risultato.next()) {
+                posto = new Posti(risultato.getString("fila"),
+                        risultato.getString("sala_nome"),
+                        risultato.getInt("numero"),
+                        risultato.getInt("id"));
+            }
+        select.close();
+        if (posto == null) {
+            System.out.println("Non esiste posto con questo id: " + id);
+            return null;
+        }else{
             System.out.println(posto.toString());
-        } catch (SQLException e) {
-            e.printStackTrace();
+            return posto;
         }
-        return posto;
     }
 
     public List<Spettacoli> suggerimenti(String emailUtente){

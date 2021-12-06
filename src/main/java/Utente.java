@@ -77,8 +77,43 @@ public class Utente {
 
     }
 
-    public List<Spettacoli> RicercaSpettacoli(){
-        return new ArrayList<>();
+    public List<Spettacoli> RicercaSpettacoli(Connection conn, String citta, Date giorno) throws SQLException {
+
+        ArrayList<Spettacoli> spettacoliArrayList= new ArrayList<>();
+        List<Spettacoli> grandezzaLista= Servizi.scaricaSpettacoli(conn, new ArrayList<>());
+
+        for (int i = 0; i < grandezzaLista.size(); i++) { //oh cazzo ho sbagliato le condizioni di esistenza
+
+            Spettacoli spettacolo=Servizi.scaricaSpettacolo(conn,i );         //funziona solo se id spettacolo 0-->+∞
+            Sala sala = Servizi.scaricaSala(conn, spettacolo.getNomeSala());            //prende il nome della sala dalla classe spettacolo
+            Sede sede = Servizi.scaricaSede(conn,sala.getIdSede());           //prende l id sede dalla classe sala
+
+            if(citta.equalsIgnoreCase(sede.getComune()) && giorno.equals(spettacolo.getGiorno())){  //qui controlla se i dati inseriti hanno riscontri
+                spettacoliArrayList.add(spettacolo);                //e in caso questo inserisce il risultato nella lista
+            }
+        }
+        return spettacoliArrayList;         //ritorna una lista di oggetti di tipo spettacolo
+    }
+
+    public List<Spettacoli> RicercaSpettacoli(Connection conn, String citta, Date giorno, String genere, String teatro) throws SQLException {
+
+        ArrayList<Spettacoli> spettacoliArrayList= new ArrayList<>();
+        List<Spettacoli> grandezzaLista= Servizi.scaricaSpettacoli(conn, new ArrayList<>());
+
+        for (int i = 0; i < grandezzaLista.size(); i++) { //oh cazzo ho sbagliato le condizioni di esistenza
+
+            Spettacoli spettacolo=Servizi.scaricaSpettacolo(conn,i );         //funziona solo se id spettacolo 0-->+∞
+            Sala sala = Servizi.scaricaSala(conn, spettacolo.getNomeSala());            //prende il nome della sala dalla classe spettacolo
+            Sede sede = Servizi.scaricaSede(conn,sala.getIdSede());           //prende l id sede dalla classe sala
+
+
+
+            if(citta.equalsIgnoreCase(sede.getComune()) && giorno.equals(spettacolo.getGiorno()) &&
+                    genere.equalsIgnoreCase(spettacolo.getGenere()) && teatro.equalsIgnoreCase(sede.getNome())){  //qui controlla se i dati inseriti hanno riscontri
+                spettacoliArrayList.add(spettacolo);                //e in caso questo inserisce il risultato nella lista
+            }
+        }
+        return spettacoliArrayList;         //ritorna una lista di oggetti di tipo spettacolo
     }
 
     @Override

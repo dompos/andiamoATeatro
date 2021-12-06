@@ -9,6 +9,18 @@ public class Sala {
         this.nome = nome;
     }
 
+    public int getnPosti() {
+        return nPosti;
+    }
+
+    public int getIdSede() {
+        return idSede;
+    }
+
+    public String getNome() {
+        return nome;
+    }
+
     @Override
     public String toString() {
         return "Sala{" +

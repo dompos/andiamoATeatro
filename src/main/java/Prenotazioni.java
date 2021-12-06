@@ -12,6 +12,26 @@ public class Prenotazioni {
         this.emailUtente = emailUtente;
     }
 
+    public int getId() {
+        return id;
+    }
+
+    public int getIdSpettacolo() {
+        return idSpettacolo;
+    }
+
+    public int getIdPosto() {
+        return idPosto;
+    }
+
+    public String getEmailUtente() {
+        return emailUtente;
+    }
+
+    public float getPrezzoFinale() {
+        return prezzoFinale;
+    }
+
     @Override
     public String toString() {
         return "Prenotazioni{" +

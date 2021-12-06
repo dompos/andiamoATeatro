@@ -1,13 +1,12 @@
-import javax.management.Query;
-import java.net.ConnectException;
 import java.sql.*;
 import java.util.ArrayList;
+import java.util.Arrays;
+import java.util.Collections;
 import java.util.List;
 
 public class Servizi {
     private static PreparedStatement insert;
     private static PreparedStatement select;
-    private static PreparedStatement selectAll;
     public static final String URL = "jdbc:postgresql://localhost:5432/andiamoateatro";
     public static final String USERNAME = "postgres";
     public static final String PASSWORD ="AlberobellO"; //inserite le vostre pssw
@@ -16,19 +15,53 @@ public class Servizi {
     public static boolean caricaUtente(Connection conn, Utente utente)  throws SQLException{
         if (scaricaUtente(conn, utente.getEmail()) != null)
             return false;
-                insert = conn.prepareStatement("insert into public.utente " +
-                        "(email, cognome, nome, residenza, telefono)" +
-                        "values ('" + utente.getEmail() + "','" + utente.getCognome() + "','" + utente.getNome() + "','"
-                        + utente.getIndirizzo() + "','" + utente.getTelefono() + "')");
-                insert.executeUpdate();
-                insert.close();
-            return true;
+        insert = getQuery(
+                conn,
+                "insert",
+                "public.utente",
+                new ArrayList<>(Arrays.asList("email", "cognome", "nome", "residenza", "telefono")),
+                new ArrayList<>(Arrays.asList(
+                        "'" + utente.getEmail() + "'",
+                        "'" + utente.getCognome() + "'",
+                        "'" + utente.getNome() + "'",
+                        "'" + utente.getIndirizzo() + "'",
+                        "'" + utente.getTelefono() + "'"))
+        );
+        insert.executeUpdate();
+        insert.close();
+        return true;
+
+    }
+
+    public static boolean caricaPrenotazione(Connection conn, Prenotazioni prenotazione)  throws SQLException{
+        if (scaricaPrenotazione(conn, prenotazione.getId()) != null)
+            return false;
+        insert = getQuery(
+                conn,
+                "insert",
+                "public.prenotazioni",
+                new ArrayList<>(Arrays.asList("id", "posti_id", "spettacoli_id", "utente_email")),
+                new ArrayList<>(Arrays.asList(
+                        ""+ prenotazione.getId() + "",
+                        "" + prenotazione.getIdPosto() + "",
+                        "" + prenotazione.getIdSpettacolo() + "",
+                        "'" + prenotazione.getEmailUtente() + "'"))
+        );
+        insert.executeUpdate();
+        insert.close();
+        return true;
 
     }
 
     public static Utente scaricaUtente(Connection conn, String emailUtente) throws SQLException{
         Utente utente = null;
-        select = conn.prepareStatement("select * from public.utente where email = '" + emailUtente + "'" );
+        select = getQuery(
+                conn,
+                "select",
+                "public.utente",
+                new ArrayList<>(),
+                new ArrayList<>(Collections.singletonList("email = '" + emailUtente + "'"))
+        );
         ResultSet risultato = select.executeQuery();
             while (risultato.next())
             {
@@ -51,7 +84,13 @@ public class Servizi {
 
     public static Sede scaricaSede(Connection conn, int id) throws SQLException{
         Sede sede = null;
-        select = conn.prepareStatement("select * from public.sede where id = " + id );
+        select = getQuery(
+                conn,
+                "select",
+                "public.sede",
+                new ArrayList<>(),
+                new ArrayList<>(Collections.singletonList("id = " + id))
+        );
         ResultSet risultato = select.executeQuery();
         while (risultato.next()) {
                sede = new Sede(risultato.getString("nome"),
@@ -72,7 +111,13 @@ public class Servizi {
 
     public static Sala scaricaSala(Connection conn, String nome) throws SQLException{
         Sala sala = null;
-        select = conn.prepareStatement("select * from public.sala where nome = '" + nome + "'");
+        select = getQuery(
+                conn,
+                "select",
+                "public.sala",
+                new ArrayList<>(),
+                new ArrayList<>(Collections.singletonList("nome = '" + nome + "'"))
+        );
         ResultSet risultato = select.executeQuery();
             while (risultato.next()) {
                 sala = new Sala(risultato.getInt("n_posti"),
@@ -89,9 +134,41 @@ public class Servizi {
         }
     }
 
+    public static List<Sala> scaricaSale(Connection conn, List<String> restrictions) throws SQLException{
+        Sala sala = null;
+        List<Sala> sale = new ArrayList<>();
+        select = getQuery(
+                conn,
+                "select",
+                "public.sala",
+                new ArrayList<>(),
+                restrictions
+        );
+        ResultSet risultato = select.executeQuery();
+        while (risultato.next()) {
+            sala = new Sala(risultato.getInt("n_posti"),
+                    risultato.getInt("sede_id"),
+                    risultato.getString("nome"));
+            sale.add(sala);
+        }
+        select.close();
+        if (sale.size() == 0) {
+            System.out.println("Non esistono sale");
+            return null;
+        }else{
+            return sale;
+        }
+    }
+
     public static Prenotazioni scaricaPrenotazione(Connection conn, int id) throws SQLException{
         Prenotazioni prenotazione = null;
-            select = conn.prepareStatement("select * from public.prenotazioni where id = " + id );
+        select = getQuery(
+                conn,
+                "select",
+                "public.prenotazioni",
+                new ArrayList<>(),
+                new ArrayList<>(Collections.singletonList("id = " + id))
+        );
             ResultSet risultato = select.executeQuery();
             while (risultato.next()) {
                 prenotazione = new Prenotazioni(risultato.getInt("id"),
@@ -111,7 +188,13 @@ public class Servizi {
 
     public static Spettacoli scaricaSpettacolo(Connection conn, int id) throws SQLException{
         Spettacoli spettacolo = null;
-        select = conn.prepareStatement("select * from public.spettacoli where id = " + id );
+        select = getQuery(
+                conn,
+                "select",
+                "public.spettacoli",
+                new ArrayList<>(),
+                new ArrayList<>(Collections.singletonList("id = " + id))
+        );
         ResultSet risultato = select.executeQuery();
         while (risultato.next()) {
             spettacolo = new Spettacoli(risultato.getString("nome"),
@@ -133,9 +216,46 @@ public class Servizi {
         }
     }
 
+    public static List<Spettacoli> scaricaSpettacoli(Connection conn, List<String> restrictions) throws SQLException{
+        Spettacoli spettacolo = null;
+        List<Spettacoli> spettacoli = new ArrayList<>();
+        select = getQuery(
+                conn,
+                "select",
+                "public.spettacoli",
+                new ArrayList<>(),
+                restrictions
+        );
+        ResultSet risultato = select.executeQuery();
+        while (risultato.next()) {
+            spettacolo = new Spettacoli(risultato.getString("nome"),
+                    risultato.getString("sala_nome"),
+                    risultato.getString("genere"),
+                    risultato.getDate("orario"),
+                    risultato.getDate("giorno"),
+                    risultato.getDouble("prezzo"),
+                    risultato.getInt("durata"),
+                    risultato.getInt("id"));
+            spettacoli.add(spettacolo);
+        }
+        select.close();
+        if (spettacoli.size() == 0) {
+            System.out.println("Non esistono spettacoli");
+            return null;
+        }else{
+            return spettacoli;
+        }
+    }
+
     public static Posti scaricaPosti(Connection conn, int id) throws SQLException{
         Posti posto = null;
-            select = conn.prepareStatement("select * from public.posti where id = " + id );
+        select = getQuery(
+                conn,
+                "select",
+                "public.posti",
+                new ArrayList<>(),
+                new ArrayList<>(Collections.singletonList("id = " + id))
+        );
             ResultSet risultato = select.executeQuery();
             while(risultato.next()) {
                 posto = new Posti(risultato.getString("fila"),
@@ -153,48 +273,55 @@ public class Servizi {
         }
     }
 
-    public static List<Object> scaricaTutto(Connection conn, String oggetto) throws SQLException{
-
-        selectAll = conn.prepareStatement("select * from public." + oggetto.toLowerCase());
-        ResultSet risultato = selectAll.executeQuery();
-        List<Object> lista;
-        switch (oggetto.toLowerCase()){
-            case "utenti":
-                lista = new ArrayList<>();
-                while (risultato.next()){
-                    lista.add(scaricaUtente(conn, risultato.getString("email")));
+    protected static PreparedStatement getQuery(Connection conn, String queryType, String table, List<String> fields, List<String> restrictions)
+    throws SQLException{
+        //"id_sede = :id"
+        //if fields è vuoto ==> *
+        String field = "";
+        String restriction = "where ";
+        switch (queryType.toLowerCase()){
+            case "select":
+                if (fields.size() == 0)
+                    field = "*";
+                else{
+                    for (String s : fields)
+                        if (field.equalsIgnoreCase(""))
+                            field += s;
+                        else
+                            field += "," + s;
                 }
-                return lista;
-            case "spettacoli":
-                lista = new ArrayList<>();
-                while (risultato.next()){
-                    lista.add(scaricaSpettacolo(conn, risultato.getInt("id")));
+                //if restrictions è vuoto ==> n non metti il where
+                if (restrictions.size() == 0)
+                    restriction = "";
+                else {
+                    for (String s : restrictions)
+                        if (restriction.equalsIgnoreCase("where "))
+                            restriction += s;
+                        else
+                            restriction += "," + s;
                 }
-                return lista;
-            case "posti":
-                lista = new ArrayList<>();
-                while (risultato.next()){
-                    lista.add(scaricaPosti(conn, risultato.getInt("id")));
+                return conn.prepareStatement("select " + field +" from " + table + " " + restriction);
+            case "insert":
+                if (fields.size() == 0)
+                    field = "*";
+                else{
+                    for (String s : fields)
+                        if (field.equalsIgnoreCase(""))
+                            field += s;
+                        else
+                            field += "," + s;
                 }
-                return lista;
-            case "prenotazioni":
-                lista = new ArrayList<>();
-                while (risultato.next()){
-                    lista.add(scaricaPrenotazione(conn, risultato.getInt("id")));
+                //if restrictions è vuoto ==> n non metti il where
+                if (restrictions.size() == 0)
+                    restriction = "";
+                else {
+                    for (String s : restrictions)
+                        if (restriction.equalsIgnoreCase("where "))
+                            restriction = s;
+                        else
+                            restriction += "," + s;
                 }
-                return lista;
-            case "sale":
-                lista = new ArrayList<>();
-                while (risultato.next()){
-                    lista.add(scaricaSala(conn, risultato.getString("nome")));
-                }
-                return lista;
-            case "sedi":
-                lista = new ArrayList<>();
-                while (risultato.next()){
-                    lista.add(scaricaSede(conn, risultato.getInt("id")));
-                }
-                return lista;
+                return conn.prepareStatement("insert into " + table + "(" + field + ") values(" + restriction +")");
         }
         return null;
     }

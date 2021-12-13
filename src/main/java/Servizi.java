@@ -326,7 +326,35 @@ public class Servizi {
         return null;
     }
 
-    public List<Spettacoli> suggerimenti(String emailUtente){
-        return new ArrayList<>();
+
+    //----------------------------------------------------------------
+
+    public static void suggerimenti(Connection connection, String emailUtente, List<String> generiFilmPrenotati) throws SQLException {
+
+
+        for (int i = 0; i < generiFilmPrenotati.size(); i++) {
+            String query = "SELECT * FROM public.spettacoli WHERE LOWER (spettacoli.genere) = ('" + generiFilmPrenotati.get(i) + "')";
+            PreparedStatement statement = connection.prepareStatement(query);
+            ResultSet resultSet = statement.executeQuery();
+
+
+
+            while (resultSet.next()) {
+                String id = resultSet.getString("id");
+                String genere = resultSet.getString("genere");
+                String prezzo = resultSet.getString("prezzo");
+                String durata = resultSet.getString("durata");
+                String giorno = resultSet.getString("giorno");
+                String sala = resultSet.getString("sala_nome");
+                String orario = resultSet.getString("orario");
+                String film = resultSet.getString("nome");
+
+                System.out.println("Id: " + id + " - Genere : " + genere + " - Prezzo: " + prezzo + " - Durata: " + durata +
+                        " - Giorno: " + giorno + " - Sala: " + sala + " - Orario : " + orario + " - Film: " + film);
+            }
+
+        }
     }
+
+    //----------------------------------------------------------------
 }
